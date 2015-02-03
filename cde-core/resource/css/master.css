@@ -791,7 +791,7 @@ tr.ui-droppable td:after {
 
 .panel-scroll-element .tableCaption {
   position: absolute;
-  top: 0px;
+  top: 24px;
   width: 100%;
 }
 
@@ -815,7 +815,7 @@ tr.ui-droppable td:after {
 
 .panel-scroll-element th .tableHeader {
   position: absolute;
-  top: 30px;
+  top: 54px;
   width: 100%;
 }
 
@@ -2090,4 +2090,10 @@ div.popup input[type="button"]:hover {
 
 .ace_editor{
     border: 1px solid #d9dcdd;
+}
+
+#panel-componentens_panel #tableSearchBox,
+#panel-datasourceens_panel #tableSearchBox {
+  position: absolute;
+  top: 0px;
 }

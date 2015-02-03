@@ -44,6 +44,9 @@ var TableManager = Base.extend({
   init: function() {
 
     this.reset();
+    if (this.searchBox) {
+      $("#" + this.id).append(this.searchBox);  
+    }
     $("#" + this.id).append(this.newTable());
     this.render();
   },
@@ -790,6 +793,12 @@ var TableManager = Base.extend({
   },
   getLinkedTableManagerOperation: function() {
     return this.linkedTableManagerOperation;
+  },
+  setSearchBox: function() {
+    this.searchBox = $("<div id='tableSearchBox' class='masterFind'><input></input></div>");
+  },
+  getSearchBox: function() {
+    return this.searchBox;
   }
 
 }, {

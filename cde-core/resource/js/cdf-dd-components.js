@@ -78,6 +78,7 @@ var ComponentsPanel = Panel.extend({
     var componentRows = cdfdd.getDashboardData().components.rows;
     componentsTableModel.setData(componentRows);
     this.componentsTable.setTableModel(componentsTableModel);
+    this.componentsTable.setSearchBox();
     this.componentsTable.init();
     $('#' + ComponentsPanel.COMPONENTS).addClass('selectedTable');
 
@@ -101,6 +102,7 @@ var ComponentsPanel = Panel.extend({
 
     this.propertiesTable.setTableModel(propertiesTableModel);
     this.propertiesTable.hasAdvancedProperties = true;
+    this.propertiesTable.setSearchBox();
     this.propertiesTable.init();
 
     this.componentsTable.setLinkedTableManager(this.propertiesTable);
