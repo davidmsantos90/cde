@@ -33,18 +33,14 @@ nbproject/private/
 .ant-targets-build.xml
 
 
-cde-core/bin
-cde-pentaho/bin
-cde-pentaho5/bin
-cde-core/lib
-cde-pentaho/lib
-cde-pentaho5/lib
-cde-core/runtime-lib
-cde-pentaho/runtime-lib
-cde-pentaho5/runtime-lib
-cde-core/test-lib
-cde-pentaho/test-lib
-cde-pentaho5/test-lib
+*/bin
+*/lib
+*/runtime-lib
+*/test-lib
+*/build-res
+*/node_modules
+*/override.properties
+*/base-src
 
 cde-core/node_modules
 npm-debug.log

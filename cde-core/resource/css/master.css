@@ -780,7 +780,7 @@ tr.ui-droppable td:after {
 #cdfdd-components-components.panel-scroll-element, #cdfdd-components-properties.panel-scroll-element,
 #cdfdd-datasources-datasources.panel-scroll-element, #cdfdd-datasources-properties.panel-scroll-element {
   position: relative;
-  padding-top: 60px;
+  padding-top: 84px;
   overflow-x: hidden;
   height: 100%;
 }
@@ -2092,8 +2092,10 @@ div.popup input[type="button"]:hover {
     border: 1px solid #d9dcdd;
 }
 
-#panel-componentens_panel #tableSearchBox,
-#panel-datasourceens_panel #tableSearchBox {
+#search-cdfdd-components-components,
+#search-cdfdd-components-properties,
+#search-cdfdd-datasources-datasources,
+#search-cdfdd-datasources-properties {
   position: absolute;
   top: 0px;
 }

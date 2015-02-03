@@ -19,11 +19,15 @@ var ComponentsPanel = Panel.extend({
   name: "Components Panel",
   initPallete: true,
   componentsPallete: {},
+  palleteSearch: {},
   componentsTable: {},
   componentsTableModel: {},
+  componentsSearch: {},
   propertiesTable: {},
   propertiesTableModel: {},
+  propertiesSearch: {},
   componentsArray: [],
+
 
   constructor: function(id) {
     this.base(id);
@@ -78,7 +82,7 @@ var ComponentsPanel = Panel.extend({
     var componentRows = cdfdd.getDashboardData().components.rows;
     componentsTableModel.setData(componentRows);
     this.componentsTable.setTableModel(componentsTableModel);
-    this.componentsTable.setSearchBox();
+    this.componentsTable.setSearchBox('search-' + ComponentsPanel.COMPONENTS);
     this.componentsTable.init();
     $('#' + ComponentsPanel.COMPONENTS).addClass('selectedTable');
 
@@ -86,6 +90,8 @@ var ComponentsPanel = Panel.extend({
     this.propertiesTable = new TableManager(ComponentsPanel.PROPERTIES);
     this.propertiesTable.setTitle("Properties");
     var propertiesTableModel = new PropertiesTableModel('componentsPropertiesTableModel');
+
+
 
     // If we set the name, we need to change the name in the componentsTable
     propertiesTableModel.setColumnSetExpressions([undefined,
@@ -102,8 +108,14 @@ var ComponentsPanel = Panel.extend({
 
     this.propertiesTable.setTableModel(propertiesTableModel);
     this.propertiesTable.hasAdvancedProperties = true;
-    this.propertiesTable.setSearchBox();
+    this.propertiesTable.setSearchBox('search-' + ComponentsPanel.PROPERTIES);
+    this.propertiesTable.setMasterFind(new PropertiesSearch('search-' + ComponentsPanel.PROPERTIES, this.propertiesTable));
     this.propertiesTable.init();
+
+    /**
+     * Search part
+     */
+    this.propertiesSearch = new PropertiesSearch('search-' + ComponentsPanel.PROPERTIES, this.propertiesTable);
 
     this.componentsTable.setLinkedTableManager(this.propertiesTable);
     this.componentsTable.setLinkedTableManagerOperation(function(row, classType) {

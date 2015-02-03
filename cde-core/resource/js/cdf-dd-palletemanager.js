@@ -98,7 +98,7 @@ var PalleteManager = Base.extend({
 			var exists = new Boolean(false);
 			
 			for(var index in array){
-				if(array.hasOwnProperty(index)){
+				if(array.hasOwnProperty(index)) {
 					if(array[index] == object){
 						exists = new Boolean(true);
 						break;
@@ -112,35 +112,41 @@ var PalleteManager = Base.extend({
 
 			var object = palleteEntry;
 			var array = this.getEntries();
-			
-
 
 			if(this.exists(object, array) == false){
 				this.getEntries()[palleteEntry.getId()] = palleteEntry;
 
 				var _cat = palleteEntry.getCategory();
-				if(typeof this.getCategories()[_cat] == 'undefined' ){
+				if(typeof this.getCategories()[_cat] == 'undefined' ) {
 					this.createCategory(palleteEntry);
 				}
 				this.getCategories()[_cat].push(palleteEntry);
 
 				var _placeholder = $(".pallete-" + _cat +" > ul ", $("#"+this.getPalleteId()) );
+				var uid = TableManager.generateGUID();
 				//TODO: this hover ain't pretty, change this...
 				//			<li onmouseover="$(this).addClass(\'ui-state-hover\')" onmouseout="$(this).removeClass(\'ui-state-hover\')" ><a class="tooltip" title="' + palleteEntry.getDescription() + '"  href="javascript:PalleteManager.executeEntry(\'' + this.getPalleteId() + '\',\''+ palleteEntry.getId() +'\');">
-				var code = '\n' +
-	'							<li><a class="tooltip" title="' + palleteEntry.getDescription() + '"  href="javascript:PalleteManager.executeEntry(\'' + this.getPalleteId() + '\',\''+ palleteEntry.getId() +'\');">\n' +
-	'			'+ palleteEntry.getName() +'\n' +
-	'			</a>\n' +
-	'			';
+				var code = '' +
+	        '<li id="'+ uid +'">' +
+						'<a class="tooltip" title="' + palleteEntry.getDescription() + '"  href="javascript:PalleteManager.executeEntry(\'' + this.getPalleteId() + '\',\''+ palleteEntry.getId() +'\');">\n' +
+						palleteEntry.getName() +'\n' + '</a>\n';
 
 				_placeholder.append(code)
 			}
 		
 		},
 
-		createCategory: function(palleteEntry){
-			
-			$("#"+this.getPalleteId()).append('<div><h3><a href="#">' + palleteEntry.getCategoryDesc() + '</a></h3><div class="pallete-'+palleteEntry.getCategory()+'"><ul></ul></div></div>');
+		createCategory: function(palleteEntry) {
+			var content = '' +
+					'<div id="' + palleteEntry.getCategory() + '">\n' +
+					'  <h3><a href="#">' + palleteEntry.getCategoryDesc() + '</a></h3>\n' +
+					'  <div class="pallete-'+palleteEntry.getCategory()+'">\n' +
+					'    <ul></ul>\n' +
+					'  </div>\n' +
+					'</div>\n';
+
+
+			$("#"+this.getPalleteId()).append(content);
 
 			this.getCategories()[palleteEntry.getCategory()] = [];
 					

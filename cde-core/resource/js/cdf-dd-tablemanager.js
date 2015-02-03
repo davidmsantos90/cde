@@ -45,7 +45,8 @@ var TableManager = Base.extend({
 
     this.reset();
     if (this.searchBox) {
-      $("#" + this.id).append(this.searchBox);  
+      $("#" + this.id).append(this.searchBox);
+      if(this.masterFind) this.masterFind.bindEvent();
     }
     $("#" + this.id).append(this.newTable());
     this.render();
@@ -794,11 +795,17 @@ var TableManager = Base.extend({
   getLinkedTableManagerOperation: function() {
     return this.linkedTableManagerOperation;
   },
-  setSearchBox: function() {
-    this.searchBox = $("<div id='tableSearchBox' class='masterFind'><input></input></div>");
+  setSearchBox: function(id) {
+    this.searchBox = $("<div id='"+ id + "' class='masterFind'><input></input></div>");
   },
   getSearchBox: function() {
     return this.searchBox;
+  },
+  setMasterFind: function(obj) {
+    this.masterFind = obj;
+  },
+  getMasterFind: function() {
+    return this.masterFind;
   }
 
 }, {
