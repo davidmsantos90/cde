@@ -27,6 +27,7 @@ var PalleteManager = Base.extend({
 			this.categories = {};
 			this.entries = {};
 			
+			$("#"+this.id).append("<div id='accordionSearchBox' class='masterFind'><input></input></div>");
 			$("#"+this.id).append(this.newPallete());
 
 			// Register this tablemanager in the global area

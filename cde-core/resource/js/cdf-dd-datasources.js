@@ -75,6 +75,7 @@ var DatasourcesPanel = Panel.extend({
     var dataSources = cdfdd.getDashboardData().datasources.rows;
     datasourcesTableModel.setData(dataSources);
     this.datasourcesTable.setTableModel(datasourcesTableModel);
+    this.datasourcesTable.setSearchBox();
     this.datasourcesTable.init();
     $('#' + DatasourcesPanel.DATASOURCES).addClass('selectedTable');
 
@@ -101,6 +102,7 @@ var DatasourcesPanel = Panel.extend({
     ]);
 
     this.propertiesTable.setTableModel(propertiesTableModel);
+    this.propertiesTable.setSearchBox();
     this.propertiesTable.init();
 
     this.datasourcesTable.setLinkedTableManager(this.propertiesTable);
