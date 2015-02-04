@@ -19,15 +19,11 @@ var ComponentsPanel = Panel.extend({
   name: "Components Panel",
   initPallete: true,
   componentsPallete: {},
-  palleteSearch: {},
   componentsTable: {},
   componentsTableModel: {},
-  componentsSearch: {},
   propertiesTable: {},
   propertiesTableModel: {},
-  propertiesSearch: {},
   componentsArray: [],
-
 
   constructor: function(id) {
     this.base(id);
