@@ -31,6 +31,8 @@ var IndexManager = Base.extend({
     // Add root entry
     var root = {};
     root.id = IndexManager.ROOTID;
+    root.description = IndexManager.ROOTID;
+    root.name = IndexManager.ROOTID;
     root.parent = null;
     root.children = [];
     root.type = _type;
@@ -58,6 +60,8 @@ var IndexManager = Base.extend({
 
           var entry = {};
           entry.id = _id;
+          entry.description = row.typeDesc || row.description;
+          entry.name = (row.properties && row.properties.hasOwnProperty(0)) ? row.properties[0].value : '';
           entry.parent = _parent;
           entry.children = [];
           entry.type = _type;

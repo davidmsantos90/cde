@@ -79,6 +79,7 @@ var ComponentsPanel = Panel.extend({
     componentsTableModel.setData(componentRows);
     this.componentsTable.setTableModel(componentsTableModel);
     this.componentsTable.setSearchBox('search-' + ComponentsPanel.COMPONENTS);
+    this.componentsTable.setMasterFind(new MainTableSearch('search-' + ComponentsPanel.COMPONENTS, this.componentsTable));
     this.componentsTable.init();
     $('#' + ComponentsPanel.COMPONENTS).addClass('selectedTable');
 

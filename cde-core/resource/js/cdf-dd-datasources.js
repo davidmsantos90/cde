@@ -76,6 +76,7 @@ var DatasourcesPanel = Panel.extend({
     datasourcesTableModel.setData(dataSources);
     this.datasourcesTable.setTableModel(datasourcesTableModel);
     this.datasourcesTable.setSearchBox('search-' + DatasourcesPanel.DATASOURCES);
+    this.datasourcesTable.setMasterFind(new MainTableSearch('search-' + DatasourcesPanel.DATASOURCES, this.datasourcesTable));
     this.datasourcesTable.init();
     $('#' + DatasourcesPanel.DATASOURCES).addClass('selectedTable');
 
@@ -103,6 +104,7 @@ var DatasourcesPanel = Panel.extend({
 
     this.propertiesTable.setTableModel(propertiesTableModel);
     this.propertiesTable.setSearchBox('search-' + DatasourcesPanel.PROPERTIES);
+    this.propertiesTable.setMasterFind(new PropertiesSearch('search-' + DatasourcesPanel.PROPERTIES, this.propertiesTable));
     this.propertiesTable.init();
 
     this.datasourcesTable.setLinkedTableManager(this.propertiesTable);
