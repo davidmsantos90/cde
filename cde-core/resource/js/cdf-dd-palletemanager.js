@@ -27,7 +27,7 @@ var PalleteManager = Base.extend({
 			this.categories = {};
 			this.entries = {};
 			
-			$("#"+this.id).append("<div id='accordionSearchBox' class='masterFind'><input></input></div>");
+			$("#"+this.id).append(this.getDivSearch());
 			this.$filteredEntriesHolder = $("<div id='filteredEntries' class='filteredEntries' style='display:none;'></div>");
 			$("#"+this.id).append(this.$filteredEntriesHolder);
 			this.pallete = $(this.newPallete());
@@ -96,6 +96,22 @@ var PalleteManager = Base.extend({
 				});
 			}
 			this.setFiltered(false);
+		},
+
+		getDivSearch: function(){
+			var $divSearch = $("<div id='accordionSearchBox' class='masterFind'></div>");
+			var $input = $("<input style='display:none;'></input>");
+			var $searchButton = $("<button id='searchButton'>S</button>");
+			$searchButton.click(function(){
+				$input.toggle(400);
+				if ($input.val().length > 0) {
+					$input.val("");
+					$input.keyup();
+				}
+			});
+			$divSearch.append($searchButton);
+			$divSearch.append($input);
+			return $divSearch;
 		},
 
 		renderFiltered: function(filtered){
