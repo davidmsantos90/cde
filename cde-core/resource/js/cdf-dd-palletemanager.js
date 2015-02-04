@@ -28,7 +28,11 @@ var PalleteManager = Base.extend({
 			this.entries = {};
 			
 			$("#"+this.id).append("<div id='accordionSearchBox' class='masterFind'><input></input></div>");
-			$("#"+this.id).append(this.newPallete());
+			this.$filteredEntriesHolder = $("<div id='filteredEntries' class='filteredEntries' style='display:none;'></div>");
+			$("#"+this.id).append(this.$filteredEntriesHolder);
+			this.pallete = $(this.newPallete());
+			$("#"+this.id).append(this.pallete);
+			this.masterFind = new PalleteSearch(id, this);
 
 			// Register this tablemanager in the global area
 			PalleteManager.register(this);
@@ -91,7 +95,33 @@ var PalleteManager = Base.extend({
 					collapsible: true
 				});
 			}
+			this.setFiltered(false);
+		},
 
+		renderFiltered: function(filtered){
+				this.setFiltered(true);
+
+				var filteredTree = "<ul>";
+				_.each(filtered, function(f){
+					filteredTree += "<li>" + f.category + "<ul>";
+					_.each(f.entries, function(ent){
+						filteredTree += $('<div>').append(this.pallete.find("#" + ent).clone()).html();
+					}, this);
+					filteredTree += "</ul></li>"
+				}, this);
+				filteredTree += "</ul>";
+
+				this.$filteredEntriesHolder.html(filteredTree);
+		},
+
+		setFiltered: function(flag){
+			if (flag) {
+				this.pallete.hide();
+				this.$filteredEntriesHolder.show();
+			} else {
+				this.$filteredEntriesHolder.hide();
+				this.pallete.show();
+			}
 		},
 
 		exists: function(object, array){
@@ -120,27 +150,32 @@ var PalleteManager = Base.extend({
 				if(typeof this.getCategories()[_cat] == 'undefined' ) {
 					this.createCategory(palleteEntry);
 				}
+				var guid = TableManager.generateGUID();
+				palleteEntry.setGUID(guid);
 				this.getCategories()[_cat].push(palleteEntry);
 
 				var _placeholder = $(".pallete-" + _cat +" > ul ", $("#"+this.getPalleteId()) );
-				var uid = TableManager.generateGUID();
+
 				//TODO: this hover ain't pretty, change this...
 				//			<li onmouseover="$(this).addClass(\'ui-state-hover\')" onmouseout="$(this).removeClass(\'ui-state-hover\')" ><a class="tooltip" title="' + palleteEntry.getDescription() + '"  href="javascript:PalleteManager.executeEntry(\'' + this.getPalleteId() + '\',\''+ palleteEntry.getId() +'\');">
 				var code = '' +
-	        '<li id="'+ uid +'">' +
+	        '<li id="'+ guid +'">' +
 						'<a class="tooltip" title="' + palleteEntry.getDescription() + '"  href="javascript:PalleteManager.executeEntry(\'' + this.getPalleteId() + '\',\''+ palleteEntry.getId() +'\');">\n' +
 						palleteEntry.getName() +'\n' + '</a>\n';
 
-				_placeholder.append(code)
+				_placeholder.append(code);
 			}
 		
 		},
 
 		createCategory: function(palleteEntry) {
+			var guid = palleteEntry.getCategory();
+			palleteEntry.setGUID(guid);
+
 			var content = '' +
-					'<div id="' + palleteEntry.getCategory() + '">\n' +
+					'<div id="' + guid + '">\n' +
 					'  <h3><a href="#">' + palleteEntry.getCategoryDesc() + '</a></h3>\n' +
-					'  <div class="pallete-'+palleteEntry.getCategory()+'">\n' +
+					'  <div class="pallete-' + guid + '">\n' +
 					'    <ul></ul>\n' +
 					'  </div>\n' +
 					'</div>\n';
@@ -188,6 +223,7 @@ var PalleteManager = Base.extend({
 var PalleteEntry = Base.extend({
 
   id: "PALLETE_ENTRY",
+  guid: "",
   name: "Base operation",
   description: "Base Operation description",
   category: undefined,
@@ -288,6 +324,8 @@ var PalleteEntry = Base.extend({
 
   getId: function(){return this.id},
   setId: function(id){this.id = id},
+  setGUID: function(guid) {this.guid = guid;},
+  getGUID: function() {return this.guid;},
   getName: function(){return this.name},
   setName: function(name){this.name = name},
   getCategory: function(){return this.category},

@@ -55,3 +55,42 @@ var PropertiesSearch = BaseSearch.extend({
     }
   }
 });
+
+var PalleteSearch = BaseSearch.extend({
+
+  tableManager: undefined,
+
+  constructor: function(id, palleteManager) {
+    this.palleteManager = palleteManager;
+    this.base(id);
+    console.log('Pallete Search Created');
+    this.bindEvent();
+  },
+  
+  filter: function(term) {
+
+    if(!term.length) {
+      this.palleteManager.render();
+    } else if(term.length < 3) {
+      return;
+    } else {
+      //this.fuzzySearch(term)
+      var filtered = {};
+      _.each(this.palleteManager.getEntries(), function(entry){
+        if (entry.name && entry.name.toLowerCase().indexOf(term.toLowerCase()) > -1) {
+          if (filtered[entry.category]) {
+            filtered[entry.category].entries.push(entry.getGUID());
+          } else {
+            filtered[entry.category] = {
+              category: entry.category,
+              entries: [entry.getGUID()]
+            };
+          }
+        }
+        console.log("iterations");
+      });
+      this.palleteManager.renderFiltered(filtered);
+    }
+  
+  }
+});

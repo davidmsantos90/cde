@@ -2099,3 +2099,11 @@ div.popup input[type="button"]:hover {
   position: absolute;
   top: 0px;
 }
+
+#filteredEntries ul li {
+  list-style-type: square;
+}
+#filteredEntries ul li ul li {
+  list-style-type: circle;
+  margin-left: 20px;
+}
