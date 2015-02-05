@@ -12,6 +12,7 @@ var BaseSearch = Base.extend({
 
   bindEvent: function(searchBox) {
     var myself = this;
+    var tableId = this.tableManager ? this.tableManager.getId() : 'pallete';
     $("#"+ this.id + " input").keyup(function(e) {
       var $this = $(this);
 
@@ -21,13 +22,32 @@ var BaseSearch = Base.extend({
     });
     if(searchBox){
       var $input = searchBox.find("input");
-      searchBox.find("span").click(function(){
-        $input.toggle(400);
-        $input.focus();
-        if($input.val().length > 0) {
-          $input.val("");
-          $input.keyup();
+
+      searchBox.click(function(e) {
+        var $advancedProps = $("#" + tableId + " .advancedProperties.propertiesUnSelected");
+
+        if(e.target.tagName === 'SPAN') {
+          $input.toggle(400);
+          $input.focus();
+
+          if($input.val().length > 0) {
+            $input.val("");
+            $input.keyup();
+          }
+
+          if($input.hasClass('collapsed')) {
+            $input.removeClass('collapsed');
+            $advancedProps.click();
+          } else {
+            $input.addClass('collapsed');
+          }
+
+        } else {
+          $advancedProps.click();
         }
+
+
+
       });
     }
   },
@@ -159,13 +179,6 @@ var PropertiesSearch = BaseSearch.extend({
 
   reset: function() {
     $("#" + this.tableManager.getTableId() + " tbody tr").show();
-  },
-
-  bindEvent: function(searchBox) {
-    this.base(searchBox);
-    searchBox.click(function() {
-      $(".advancedProperties.propertiesUnSelected").click();
-    });
   },
 
   filter: function(term) {
@@ -300,7 +313,7 @@ var PalleteSearch = BaseSearch.extend({
     } else {
       var filtered = {};
       _.each(this.palleteManager.getEntries(), function(entry) {
-          if(myself.searchAndValidate(term.toLowerCase(), myself.normalizeSearchParam(entry.description))) {
+          if(myself.searchAndValidate(term.toLowerCase(), myself.normalizeSearchParam(entry.name))) {
             if(filtered[entry.category]) {
               filtered[entry.category].entries.push(entry.getGUID());
             } else {

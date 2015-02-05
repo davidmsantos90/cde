@@ -798,7 +798,7 @@ var TableManager = Base.extend({
     return this.linkedTableManagerOperation;
   },
   setSearchBox: function(id) {
-    this.searchBox = $("<div id='"+ id +"' class='masterFind'><span id='magGlass'></span><input style='display:none;'></input></div>");
+    this.searchBox = $("<div id='"+ id +"' class='masterFind'><span id='magGlass'></span><input style='display:none;' class='collapsed'/></div>");
   },
   getSearchBox: function() {
     return this.searchBox;
