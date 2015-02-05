@@ -780,7 +780,7 @@ tr.ui-droppable td:after {
 #cdfdd-components-components.panel-scroll-element, #cdfdd-components-properties.panel-scroll-element,
 #cdfdd-datasources-datasources.panel-scroll-element, #cdfdd-datasources-properties.panel-scroll-element {
   position: relative;
-  padding-top: 84px;
+  padding-top: 60px;
   overflow-x: hidden;
   height: 100%;
 }
@@ -791,7 +791,7 @@ tr.ui-droppable td:after {
 
 .panel-scroll-element .tableCaption {
   position: absolute;
-  top: 24px;
+  top: 0px;
   width: 100%;
 }
 
@@ -815,7 +815,7 @@ tr.ui-droppable td:after {
 
 .panel-scroll-element th .tableHeader {
   position: absolute;
-  top: 54px;
+  top: 30px;
   width: 100%;
 }
 
@@ -2205,9 +2205,37 @@ div.popup input[type="button"]:hover {
   position: absolute;
   margin-top: 2px;
 }
+.masterFind #magGlass:hover {
+  cursor: pointer;
+  background-image: url("sunny/images/ui-icons_3383bb_256x240.png");
+  background-position: -160px -110px;
+}
 .masterFind input {
   margin-left: 17px;
 }
 #accordionSearchBox {
-  height:21px;
+  height: 20px;
+  padding: 5px;
+  border-bottom: none;
+  font-weight: normal;
+  background: #eaedee;
+  color: #555;
+}
+#search-cdfdd-components-components.masterFind {
+  margin-left: 90px;
+  margin-top: 3px;
+}
+
+#search-cdfdd-components-properties.masterFind {
+  margin-left: 228px;
+  margin-top: 3px;
+}
+
+#search-cdfdd-datasources-datasources.masterFind {
+  margin-left: 90px;
+  margin-top: 3px; 
+}
+#search-cdfdd-datasources-properties.masterFind {
+  margin-left: 75px;
+  margin-top: 3px;
 }

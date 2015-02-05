@@ -129,6 +129,16 @@ var CDFDD = Base.extend({
               cdfdd.cggDialog();
             }
             break;
+          case 70:
+          if(e.shiftKey) { //shift + f
+            var $masterFind = $("#panel-" + activePanel.id + " .masterFind");
+            if ($masterFind.find("input:visible").length > 0 ) {
+              $masterFind.find("input").hide(400);
+            } else {
+              $masterFind.find("input").show(400);
+            }
+          }
+          break;
           case 222: //?
             cdfdd.toggleHelp();
             break;

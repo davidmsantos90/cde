@@ -44,11 +44,12 @@ var TableManager = Base.extend({
   init: function() {
 
     this.reset();
+    $("#" + this.id).append(this.newTable());
     if (this.searchBox) {
-      $("#" + this.id).append(this.searchBox);
+      this.searchBox.insertAfter($("#" + this.id).find(".tableCaption .simpleProperties"));
+
       if(this.masterFind) this.masterFind.bindEvent(this.searchBox);
     }
-    $("#" + this.id).append(this.newTable());
     this.render();
   },
 
