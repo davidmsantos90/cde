@@ -44,11 +44,12 @@ var TableManager = Base.extend({
   init: function() {
 
     this.reset();
+    $("#" + this.id).append(this.newTable());
     if (this.searchBox) {
-      $("#" + this.id).append(this.searchBox);
+      this.searchBox.insertAfter($("#" + this.id).find(".tableCaption .simpleProperties"));
+
       if(this.masterFind) this.masterFind.bindEvent(this.searchBox);
     }
-    $("#" + this.id).append(this.newTable());
     this.render();
   },
 
@@ -796,7 +797,7 @@ var TableManager = Base.extend({
     return this.linkedTableManagerOperation;
   },
   setSearchBox: function(id) {
-    this.searchBox = $("<div id='"+ id +"' class='masterFind'><button>S</button><input style='display:none;'></input></div>");
+    this.searchBox = $("<div id='"+ id +"' class='masterFind'><span id='magGlass'></span><input style='display:none;'></input></div>");
   },
   getSearchBox: function() {
     return this.searchBox;

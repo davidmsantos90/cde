@@ -27,7 +27,7 @@ var PalleteManager = Base.extend({
 			this.categories = {};
 			this.entries = {};
 			
-			$("#"+this.id).append(this.getDivSearch());
+			$("#"+this.id).append(this.getDivSearch(id));
 			this.$filteredEntriesHolder = $("<div id='filteredEntries' class='filteredEntries' style='display:none;'></div>");
 			$("#"+this.id).append(this.$filteredEntriesHolder);
 			this.pallete = $(this.newPallete());
@@ -67,41 +67,31 @@ var PalleteManager = Base.extend({
 			var re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
 			if(re.exec(navigator.userAgent) != null) { rv = parseFloat(RegExp.$1); }
 
-			if(rv && rv < 9) {
-				
-				_placeholder.accordion({
-					header: "h3",
-					active: false,
-					heightStyle: "content",
-					animated: false,
-					//event: "mouseover",
-					icons: {
-						header: "ui-icon-triangle-1-e",
-						headerSelected: "ui-icon-triangle-1-s"
-					},
-					collapsible: true
-				});
-			} else {
-
-				_placeholder.accordion({
+			var accordionOptions = {
 					header: "h3",
 					active: false,
 					heightStyle: "content",
 					//event: "mouseover",
 					icons: {
 						header: "ui-icon-triangle-1-e",
-						headerSelected: "ui-icon-triangle-1-s"
+						activeHeader: "ui-icon-triangle-1-s"
 					},
 					collapsible: true
-				});
+				};
+			if(rv && rv < 9) { 
+				accordionOptions.animated = false; 
 			}
+				
+			_placeholder.accordion(accordionOptions);
+			
 			this.setFiltered(false);
 		},
 
-		getDivSearch: function(){
-			var $divSearch = $("<div id='accordionSearchBox' class='masterFind'></div>");
+		getDivSearch: function(id){
+			var palleteTitle = (id.indexOf("components") > -1 ? "Components" : "Datasources") + " Pallete";
+			var $divSearch = $("<div id='accordionSearchBox' class='masterFind'><div class='simpleProperties propertiesSelected'>" + palleteTitle + "</div></div>");
 			var $input = $("<input style='display:none;'></input>");
-			var $searchButton = $("<button id='searchButton'>S</button>");
+			var $searchButton = $("<span id='magGlass'></span>");
 			$searchButton.click(function(){
 				$input.toggle(400);
 				if ($input.val().length > 0) {
@@ -117,15 +107,18 @@ var PalleteManager = Base.extend({
 		renderFiltered: function(filtered){
 				this.setFiltered(true);
 
-				var filteredTree = "<ul>";
+
+				var filteredTree = "";
 				_.each(filtered, function(f){
-					filteredTree += "<li>" + f.category + "<ul>";
+					filteredTree += "<div id='filteredContainer'><h3><span></span><a>" + f.category + "</a></h3>";
+					filteredTree += "<div id='filteredItemsContainer'><ul>";
 					_.each(f.entries, function(ent){
 						filteredTree += $('<div>').append(this.pallete.find("#" + ent).clone()).html();
 					}, this);
-					filteredTree += "</ul></li>"
+					filteredTree += "</ul></div></div>"
 				}, this);
-				filteredTree += "</ul>";
+				//filteredTree += "</ul>";
+
 
 				this.$filteredEntriesHolder.html(filteredTree);
 		},
