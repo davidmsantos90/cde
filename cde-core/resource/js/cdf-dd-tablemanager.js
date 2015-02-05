@@ -49,6 +49,7 @@ var TableManager = Base.extend({
       this.searchBox.insertAfter($("#" + this.id).find(".tableCaption .simpleProperties"));
 
       if(this.masterFind) this.masterFind.bindEvent(this.searchBox);
+      this.searchBox.find("input").focus();
     }
     this.render();
   },
@@ -860,7 +861,6 @@ var TableManager = Base.extend({
           _tableManager.selectCell(row, col, 'advanced');
           $(".advancedProperties").attr("class", "advancedProperties propertiesSelected");
           $(".advancedProperties").parent().find(".simpleProperties").attr("class", "simpleProperties propertiesUnSelected");
-
         }
       }, 500);
     });

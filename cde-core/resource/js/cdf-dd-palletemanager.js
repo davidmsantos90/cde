@@ -83,7 +83,6 @@ var PalleteManager = Base.extend({
 			}
 				
 			_placeholder.accordion(accordionOptions);
-			
 			this.setFiltered(false);
 		},
 
