@@ -8,7 +8,7 @@ var BaseSearch = Base.extend({
     this.id = id;
   },
 
-  bindEvent: function() {
+  bindEvent: function(searchBox) {
     var myself = this;
     $("#"+ this.id + " input").keyup(function(e) {
       var $this = $(this);
@@ -17,6 +17,16 @@ var BaseSearch = Base.extend({
       filter();
       $this.focus();
     });
+    if (searchBox){
+      var $input = searchBox.find("input");
+      searchBox.find("button").click(function(){
+        $input.toggle(400);
+        if ($input.val().length > 0) {
+          $input.val("");
+          $input.keyup();
+        }
+      });
+    }
   },
 
   filter: function() {
@@ -154,13 +164,15 @@ var PalleteSearch = BaseSearch.extend({
     console.log('Pallete Search Created');
     this.bindEvent();
   },
+
+  reset: function(){
+    this.palleteManager.render();
+  },
   
   filter: function(term) {
-
-    if(!term.length) {
-      this.palleteManager.render();
-    } else if(term.length < 3) {
-      return;
+    
+    if(term.length < 2) {
+      this.reset();
     } else {
       //this.fuzzySearch(term)
       var filtered = {};
@@ -175,7 +187,6 @@ var PalleteSearch = BaseSearch.extend({
             };
           }
         }
-        console.log("iterations");
       });
       this.palleteManager.renderFiltered(filtered);
     }
