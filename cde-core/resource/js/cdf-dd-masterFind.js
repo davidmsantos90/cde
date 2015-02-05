@@ -19,7 +19,7 @@ var BaseSearch = Base.extend({
     });
     if (searchBox){
       var $input = searchBox.find("input");
-      searchBox.find("button").click(function(){
+      searchBox.find("span").click(function(){
         $input.toggle(400);
         if ($input.val().length > 0) {
           $input.val("");
@@ -252,7 +252,7 @@ var PalleteSearch = BaseSearch.extend({
             filtered[entry.category].entries.push(entry.getGUID());
           } else {
             filtered[entry.category] = {
-              category: entry.category,
+              category: entry.categoryDesc,
               entries: [entry.getGUID()]
             };
           }

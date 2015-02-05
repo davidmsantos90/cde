@@ -101,7 +101,7 @@ var PalleteManager = Base.extend({
 		getDivSearch: function(){
 			var $divSearch = $("<div id='accordionSearchBox' class='masterFind'></div>");
 			var $input = $("<input style='display:none;'></input>");
-			var $searchButton = $("<button id='searchButton'>S</button>");
+			var $searchButton = $("<span id='magGlass'></span>");
 			$searchButton.click(function(){
 				$input.toggle(400);
 				if ($input.val().length > 0) {
@@ -117,15 +117,18 @@ var PalleteManager = Base.extend({
 		renderFiltered: function(filtered){
 				this.setFiltered(true);
 
-				var filteredTree = "<ul>";
+
+				var filteredTree = "";
 				_.each(filtered, function(f){
-					filteredTree += "<li>" + f.category + "<ul>";
+					filteredTree += "<div id='filteredContainer'><h3><span></span><a>" + f.category + "</a></h3>";
+					filteredTree += "<div id='filteredItemsContainer'><ul>";
 					_.each(f.entries, function(ent){
 						filteredTree += $('<div>').append(this.pallete.find("#" + ent).clone()).html();
 					}, this);
-					filteredTree += "</ul></li>"
+					filteredTree += "</ul></div></div>"
 				}, this);
-				filteredTree += "</ul>";
+				//filteredTree += "</ul>";
+
 
 				this.$filteredEntriesHolder.html(filteredTree);
 		},
