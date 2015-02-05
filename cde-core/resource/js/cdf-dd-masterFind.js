@@ -37,8 +37,70 @@ var BaseSearch = Base.extend({
     //default does nothing
   },
 
-  fuzzySearch: function() {
-    //insert fuzzyness
+  fuzzySearch: function(s1, s2) {
+
+    var boostThreshold = 0.7, //constant, user defines
+        scalar = 0.1,         //constant, user defines
+        commonStart = 0,
+        length1 = s1.length,
+        length2 = s2.length,
+        matching = 0,
+        transpositions = 0,
+        interval = Math.floor( ( Math.max(length1, length2)/2 ) - 1 );
+
+    //calculate matching chars
+    var match1 = [],
+        match2 = [];
+
+    for(var i = 0; i < length1; i++) {
+      var char1 = s1.charAt(i);
+      var start = Math.max(0, i - interval);
+      var end = Math.min(length2, i + interval);
+      for(var j = start; j < end; j++) {
+        if(!match2[j] && char1 == s2.charAt(j)) {
+          match1[i] = char1;
+          match2[j] = s2[j];
+          matching++;
+          break;
+        }
+      }
+    }
+
+    var jaroDistance;
+    if(!matching) {
+      jaroDistance = 0;
+
+    } else {
+      //calculate transpositions
+      match1 = match1.join("");
+      match2 = match2.join("");
+      for(i = 0; i < match1.length; i++) {
+        if(match1.charAt(i) != match2.charAt(i)){
+          //if(match1[1] != match2[i]) {
+          transpositions++;
+        }
+      }
+      transpositions /= 2;
+
+      jaroDistance = (1/3) * ((matching/length1) + (matching/length2) + ((matching-transpositions)/matching));
+    }
+
+    var jaroWinklerDistance;
+    if(jaroDistance < boostThreshold) {
+      jaroWinklerDistance = jaroDistance;
+    } else {
+      for(i = 0; i < Math.min(4, length2); i++) { // commonStart scalar goes to a maximum of 4
+        if(s1[i] == s2[i]) {
+          commonStart++;
+        } else {
+          break;
+        }
+      }
+
+      jaroWinklerDistance = jaroDistance + ( commonStart * scalar * ( 1 - jaroDistance ) );
+    }
+
+    return jaroWinklerDistance;
   }
 });
 
@@ -105,6 +167,7 @@ var MainTableSearch = BaseSearch.extend({
       this.reset();
     } else {
       this.preFilter(); // get groups in the table
+      indexManager.updateIndex();
 
       for (var key in this.searchGroups) {
         if (this.searchGroups.hasOwnProperty(key)) {
@@ -116,12 +179,19 @@ var MainTableSearch = BaseSearch.extend({
 
           for (var i = 0, L = children.length; i < L; i++) {
             var node = children[i];
-            if (node.description.toLowerCase().indexOf(term) > -1 ||
-                node.name.toLowerCase().indexOf(term) > -1) {
+            var search = node.description.toLowerCase().split(" ").concat( node.name.toLowerCase().split(" ") );
+            var hideNode = true;
+            for(var j = 0, N = search.length; j < N; j++) {
+              if(this.fuzzySearch(term, search[j]) > 0.75) {
+                hideNode = false;
+                break;
+              }
+            }
+            if(hideNode) {
+              $("#" + node.id).hide();
+            } else {
               hideGroup = false;
               $("#" + node.id).show();
-            } else {
-              $("#" + node.id).hide();
             }
           }
 
@@ -165,10 +235,10 @@ var PalleteSearch = BaseSearch.extend({
     this.bindEvent();
   },
 
-  reset: function(){
+  reset: function() {
     this.palleteManager.render();
   },
-  
+
   filter: function(term) {
     
     if(term.length < 2) {
@@ -190,6 +260,6 @@ var PalleteSearch = BaseSearch.extend({
       });
       this.palleteManager.renderFiltered(filtered);
     }
-  
+
   }
 });
