@@ -93,6 +93,7 @@ var PalleteManager = Base.extend({
 			var $searchButton = $("<span id='magGlass'></span>");
 			$searchButton.click(function(){
 				$input.toggle(400);
+				$input.focus();
 				if ($input.val().length > 0) {
 					$input.val("");
 					$input.keyup();
