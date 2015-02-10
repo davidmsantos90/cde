@@ -133,7 +133,8 @@ var CDFDD = Base.extend({
           if(e.shiftKey) { //shift + f
             var $masterFind = $("#panel-" + activePanel.id + " .masterFind");
             if ($masterFind.find("input:visible").length > 0 ) {
-              $masterFind.find("input").addClass('collapsed').hide(400);
+              $masterFind.find("input").val("");
+              $masterFind.find("input").hide(400);
             } else {
               $masterFind.find("input").removeClass('collapsed').show(400);
             }
