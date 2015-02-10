@@ -137,10 +137,15 @@ var BaseSearch = Base.extend({
 
     } else {
       //calculate transpositions
-      match1 = match1.join("");
-      match2 = match2.join("");
+      match1 = match1.filter(function(elem) {
+        return elem != undefined;
+      });
+      match2 = match2.filter(function(elem) {
+        return elem != undefined;
+      });
+
       for(i = 0; i < match1.length; i++) {
-        if(match1.charAt(i) != match2.charAt(i)) {
+        if(match1[i] != match2[i]) {
           transpositions++;
         }
       }
