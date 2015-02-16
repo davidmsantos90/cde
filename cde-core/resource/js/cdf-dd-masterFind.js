@@ -3,6 +3,7 @@ var BaseSearch = Base.extend({
   id: undefined,
   tableManager: undefined,
   acceptFuzzyScore: undefined,
+  mode: 1,
 
   constructor: function(id, score) {
     //creates search
@@ -52,8 +53,19 @@ var BaseSearch = Base.extend({
     }
   },
 
-  filter: function() {
-    //default does nothing
+  filter: function(term) {
+    if(term.length < 2) {
+      this.reset();
+    } else {
+      switch (this.mode) {
+        case 0: //XXX classic mode
+          this.classicFilter(term);
+        break;
+        case 1: //XXX fuzzy mode
+          this.fuzzyFilter(term);
+        break;
+      }
+    }
   },
 
   reset:function() {
@@ -186,22 +198,30 @@ var PropertiesSearch = BaseSearch.extend({
     $("#" + this.tableManager.getTableId() + " tbody tr").show();
   },
 
-  filter: function(term) {
+  search: function(term, conditionFunction){
+    var searchElements = this.tableManager.getTableModel().getData(),
+        myself = this;
+    for(var i = 0, L = searchElements.length; i < L; i++) {
+      var item = searchElements[i];
 
-    if(term.length < 2) {
-      this.reset();
-    } else {
-      var searchElements = this.tableManager.getTableModel().getData();
-      for(var i = 0, L = searchElements.length; i < L; i++) {
-        var item = searchElements[i];
-
-        if(this.searchAndValidate(term.toLowerCase(), this.normalizeSearchParam(item.description))) {
-          $("#" + item.id).show();
-        } else {
-          $("#" + item.id).hide();
-        }
+      if(conditionFunction(myself, item)) {
+        $("#" + item.id).show();
+      } else {
+        $("#" + item.id).hide();
       }
     }
+  },
+
+  fuzzyFilter: function(term) {
+    this.search(term, function(ctx, item){
+      return ctx.searchAndValidate(term.toLowerCase(), ctx.normalizeSearchParam(item.description))
+    });
+  },
+
+  classicFilter: function(term){
+    this.search(term, function(ctx, item){
+      return item.description && entry.description.toLowerCase().indexOf(term.toLowerCase()) > -1;
+    });
   }
 });
 
@@ -235,45 +255,46 @@ var MainTableSearch = BaseSearch.extend({
     }
   },
 
-  filter: function(term) {
+  fuzzyFilter: function(term) {
     var tableModel = this.tableManager.getTableModel();
     var indexManager = tableModel.getIndexManager();
     var index = indexManager.getIndex();
 
-    if(term.length < 2) {
-      this.reset();
-    } else {
-      this.preFilter();           //get groups in the table
-      indexManager.updateIndex();
+    this.preFilter();           //get groups in the table
+    indexManager.updateIndex();
 
-      for(var key in this.searchGroups) {
-        if(this.searchGroups.hasOwnProperty(key)) {
-          var hideGroup = true;
-          var group = $("tr#" + key);
-          var children = index[key].children;
+    for(var key in this.searchGroups) {
+      if(this.searchGroups.hasOwnProperty(key)) {
+        var hideGroup = true;
+        var group = $("tr#" + key);
+        var children = index[key].children;
 
-          if(group.is('.collapsed')) group.toggleBranch(); //guaranty branch is expanded before starting search
+        if(group.is('.collapsed')) group.toggleBranch(); //guaranty branch is expanded before starting search
 
-          for(var i = 0, L = children.length; i < L; i++) {
-            var hideNode = true;
-            var node = children[i];
+        for(var i = 0, L = children.length; i < L; i++) {
+          var hideNode = true;
+          var node = children[i];
 
-            if(this.searchAndValidate(term.toLowerCase(), this.normalizeSearchParam(node.description + ' ' + node.name))) {
-              hideGroup = false;
-              $("#" + node.id).show();
-            } else {
-              $("#" + node.id).hide();
-            }
-          }
-
-          if(hideGroup) { //hide group if no children is being shown
-            group.hide();
+          if(this.searchAndValidate(term.toLowerCase(), this.normalizeSearchParam(node.description + ' ' + node.name))) {
+            hideGroup = false;
+            $("#" + node.id).show();
           } else {
-            group.show();
+            $("#" + node.id).hide();
           }
+        }
+
+        if(hideGroup) { //hide group if no children is being shown
+          group.hide();
+        } else {
+          group.show();
         }
       }
     }
+    
+  },
+
+  classicFilter: function(term){
+    
   },
 
   reset: function() {
@@ -310,26 +331,33 @@ var PalleteSearch = BaseSearch.extend({
     this.palleteManager.render();
   },
 
-  filter: function(term) {
-    var myself = this;
-    
-    if(term.length < 2) {
-      this.reset();
-    } else {
-      var filtered = {};
-      _.each(this.palleteManager.getEntries(), function(entry) {
-          if(myself.searchAndValidate(term.toLowerCase(), myself.normalizeSearchParam(entry.name))) {
-            if(filtered[entry.category]) {
-              filtered[entry.category].entries.push(entry.getGUID());
-            } else {
-              filtered[entry.category] = {
-                category: entry.category,
-                entries: [entry.getGUID()]
-              };
-            }
-        }
-      });
-      this.palleteManager.renderFiltered(filtered);
-    }
+  search: function(term, conditionFunction) {
+    var myself = this,
+        filtered = {};
+    _.each(this.palleteManager.getEntries(), function(entry) {
+        if(conditionFunction(myself,entry)) {
+          if(filtered[entry.category]) {
+            filtered[entry.category].entries.push(entry.getGUID());
+          } else {
+            filtered[entry.category] = {
+              category: entry.category,
+              entries: [entry.getGUID()]
+            };
+          }
+      }
+    });
+    this.palleteManager.renderFiltered(filtered);
+  },
+
+  fuzzyFilter: function(term) {
+    this.search(term, function(ctx, entry){
+      return ctx.searchAndValidate(term.toLowerCase(), ctx.normalizeSearchParam(entry.name))
+    });
+  },
+
+  classicFilter: function(term){
+    this.search(term, function(ctx, entry){
+      return entry.name && entry.name.toLowerCase().indexOf(term.toLowerCase()) > -1;
+    });
   }
 });
